@@ -28,47 +28,33 @@ class Controller extends BaseController
         $this->client = $quick;
     }
 
-    public function generate()
+    public function generate($id)
     {
-        $dashboardId = "416d12b6-dd72-4df7-9c07-59acd600cfff";
         $accountId = config('services.quicksight.account');
-
-        $experienceConfiguration = [
-            "Dashboard" => [
-                "InitialDashboardId"=> "416d12b6-dd72-4df7-9c07-59acd600cfff"
-            ]
-        ];
+        $reader = config('services.quicksight.reader');
 
         try {
-            /*$result = $quick->generateEmbedUrlForAnonymousUser([
-                'AwsAccountId' => $accountId,
-                'Namespace' => 'default',
-                'AuthorizedResourceArns' => [
-                    "arn:aws:quicksight:ap-northeast-1:251286709479:dashboard/416d12b6-dd72-4df7-9c07-59acd600cfff"
-                ],
-                'ExperienceConfiguration' => $experienceConfiguration,
-                'SessionLifetimeInMinutes' => 600,
-            ]);*/
 
             $result = $this->client->GetDashboardEmbedUrl([
                 'AwsAccountId' => $accountId,
-                'DashboardId' => "416d12b6-dd72-4df7-9c07-59acd600cfff",
-                'IdentityType' => 'IAM',
+                'DashboardId' => $id,
+                'IdentityType' => 'QUICKSIGHT',
+                'UserArn' => 'arn:aws:quicksight:ap-northeast-1:' . $accountId . ':user/default/' . $reader,
                 'ResetDisabled' => true,
                 'SessionLifetimeInMinutes' => 600,
                 'UndoRedoDisabled' => false
             ]);
         } catch (AwsException $e) {
-            dd($e);
+            return response()->json([
+                'code' => 404,
+                'dashboard' => '',
+            ]);
         }
 
         return response()->json([
             'code' => 200,
-            'message' => 'Operation successfull',
-            'dashboard' => $result,
+            'dashboard' => $result->get('EmbedUrl'),
         ]);
-
-        dd($quick);
     }
 
     public function register()
@@ -78,9 +64,10 @@ class Controller extends BaseController
             $result = $this->client->registerUser([
                 'AwsAccountId' => $accountId, // REQUIRED
                 'Email' => 'nhtienptit@gmail.com', // REQUIRED
-                'IdentityType' => 'IAM', // REQUIRED
+                'IdentityType' => 'QUICKSIGHT', // REQUIRED
                 'Namespace' => 'default', // REQUIRED
-                'UserRole' => 'READER'
+                'UserRole' => 'READER',
+                'UserName' => 'tiennh2',
             ]);
         } catch (AwsException $e) {
             dd($e);

@@ -34,6 +34,7 @@ return [
         'key' => env('AWS_QS_KEY'),
         'secret' => env('AWS_QS_SECRET'),
         'account' => env('AWS_QS_ACCOUNT_ID'),
+        'reader' => env('AWS_QS_READER_USERNAME'),
     ]
 
 ];
