@@ -19,5 +19,5 @@ Route::get('/', function () {
 });
 
 
-Route::get('generate/{id}', [Controller::class, 'generate']);
+Route::get('generate/{id}', [Controller::class, 'generate'])->middleware(['cors']);
 Route::get('register', [Controller::class, 'register']);
