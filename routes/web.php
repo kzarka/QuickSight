@@ -21,3 +21,4 @@ Route::get('/', function () {
 
 Route::get('generate', [Controller::class, 'generate']);
 Route::get('register', [Controller::class, 'register']);
+Route::get('build', [Controller::class, 'buildCsv']);

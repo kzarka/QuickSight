@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CSVService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -90,5 +91,10 @@ class Controller extends BaseController
             'message' => 'Operation successfull',
             'dashboard' => $result,
         ]);
+    }
+
+    public function buildCsv(CSVService $service)
+    {
+        $service->write();
     }
 }
