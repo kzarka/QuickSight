@@ -42,6 +42,7 @@ class Controller extends BaseController
                 'IdentityType' => 'QUICKSIGHT',
                 'UserArn' => 'arn:aws:quicksight:ap-northeast-1:' . $accountId . ':user/default/' . $reader,
                 'ResetDisabled' => true,
+                'UndoRedoDisabled ' => true,
                 'SessionLifetimeInMinutes' => 600,
                 'UndoRedoDisabled' => false
             ]);
