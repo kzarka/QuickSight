@@ -31,7 +31,7 @@
                     </svg>
                 </div>
 
-                <iframe class="py-4" style="width: 100%" src="{{ $link }}"></iframe>
+                <iframe class="py-4" style="width: 100%; height: 90vh;" src="{{ $link }}"></iframe>
 
             </div>
         </div>
