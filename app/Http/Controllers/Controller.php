@@ -69,7 +69,7 @@ class Controller extends BaseController
     public function generateConsole()
     {
         $accountId = config('services.quicksight.account');
-        $reader = 'n.htienptit@gmail.com';
+        $reader = config('services.quicksight.reader');
 
         try {
             //dd('arn:aws:quicksight:ap-northeast-1:' . $accountId . ':user/default/' . $reader);
@@ -121,7 +121,7 @@ class Controller extends BaseController
     public function generateConsoleOnly()
     {
         $accountId = config('services.quicksight.account');
-        $reader = 'n.htienptit@gmail.com';
+        $reader = config('services.quicksight.reader');
 
         try {
             //dd('arn:aws:quicksight:ap-northeast-1:' . $accountId . ':user/default/' . $reader);
