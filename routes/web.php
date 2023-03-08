@@ -14,11 +14,11 @@ use App\Http\Controllers\Controller;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [Controller::class, 'index']);
 
 
 Route::get('generate/{id}', [Controller::class, 'generate'])->middleware(['cors']);
+Route::get('generate-console', [Controller::class, 'generateConsole'])->middleware(['cors']);
 Route::get('register', [Controller::class, 'register']);
 Route::get('build', [Controller::class, 'buildCsv']);
+Route::get('build/maintain', [Controller::class, 'buildMaintainLog']);

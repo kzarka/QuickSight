@@ -9,7 +9,9 @@ use Box\Spout\Common\Entity\Row;
 use Box\Spout\Writer\Exception\WriterNotOpenedException;
 use Carbon\Carbon;
 
-class CSVService {
+class MaintainLogService {
+
+    public $amount = 100;
     /**
      * @throws WriterNotOpenedException
      * @throws IOException
@@ -23,11 +25,10 @@ class CSVService {
         $writer->openToFile($filePath); // write data to a file or to a PHP stream
 
         /** Shortcut: add a row from an array of values */
-        $values = ['Carl', 'is', 'great!'];
         $header = WriterEntityFactory::createRowFromArray($this->header());
         $writer->addRow($header);
 
-        $fromDate = Carbon::createFromFormat('d/m/Y H:i:s',  '01/01/2022 00:00:00');
+        $fromDate = Carbon::createFromFormat('d/m/Y H:i:s',  '02/01/2023 00:00:00');
         $toDate = Carbon::createFromFormat('d/m/Y H:i:s',  '01/04/2023 00:00:00');
         while ($fromDate < $toDate) {
             $data = $this->buildData($fromDate->toDateString());
@@ -41,37 +42,25 @@ class CSVService {
 
     public function buildData($date)
     {
-        $failure = rand(0, 12);
-        $first = 0;
-        $reoccurring = 0;
-
-        if ($failure) {
-            $reoccurring = rand(0, $failure);
-            $first = $failure - $reoccurring;
-        }
-
-        $downtime = 0;
-        if ($failure) {
-            $downtime = rand(100, 500);
+        $pics = ['Aさん', 'Bさん', 'Cさん'];
+        $decreases = [1, 1.5, 2];
+        $this->amount = $this->amount - $decreases[rand(0, 2)];
+        if ($this->amount < 2.5) {
+            $this->amount = 100;
         }
 
         return [
             $date,
-            $failure,
-            $first,
-            $reoccurring,
-            $downtime
+            $pics[rand(0, 2)],
+            20,
+            $this->amount,
         ];
     }
 
     public function header()
     {
         return [
-            'date',
-            'total_error',
-            'first_time',
-            'reoccurring',
-            'downtime'
+            'id', 'pic', 'threshold', 'value'
         ];
     }
 }

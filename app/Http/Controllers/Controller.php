@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\CSVService;
+use App\Services\MaintainLogService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -27,6 +28,12 @@ class Controller extends BaseController
             ]
         ]);
         $this->client = $quick;
+    }
+
+    public function index()
+    {
+        $link = $this->generateConsoleOnly();
+        return view('welcome')->with(['link' => $link]);
     }
 
     public function generate($id)
@@ -59,6 +66,36 @@ class Controller extends BaseController
         ]);
     }
 
+    public function generateConsole()
+    {
+        $accountId = config('services.quicksight.account');
+        $reader = 'n.htienptit@gmail.com';
+
+        try {
+            //dd('arn:aws:quicksight:ap-northeast-1:' . $accountId . ':user/default/' . $reader);
+            $result = $this->client->GenerateEmbedUrlForRegisteredUser([
+                "AwsAccountId" => $accountId,
+                "ExperienceConfiguration" => [
+                    "QuickSightConsole" => [
+                        "InitialPath" => '/start',
+                    ]
+                ],
+                "UserArn" => 'arn:aws:quicksight:ap-northeast-1:' . $accountId . ':user/default/' . $reader,
+                "SessionLifetimeInMinutes" => 600
+            ]);
+        } catch (AwsException $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'code' => 404,
+                'dashboard' => '',
+            ]);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'dashboard' => $result->get('EmbedUrl'),
+        ]);
+    }
     public function register()
     {
         try {
@@ -81,7 +118,36 @@ class Controller extends BaseController
         ]);
     }
 
+    public function generateConsoleOnly()
+    {
+        $accountId = config('services.quicksight.account');
+        $reader = 'n.htienptit@gmail.com';
+
+        try {
+            //dd('arn:aws:quicksight:ap-northeast-1:' . $accountId . ':user/default/' . $reader);
+            $result = $this->client->GenerateEmbedUrlForRegisteredUser([
+                "AwsAccountId" => $accountId,
+                "ExperienceConfiguration" => [
+                    "QuickSightConsole" => [
+                        "InitialPath" => '/start',
+                    ]
+                ],
+                "UserArn" => 'arn:aws:quicksight:ap-northeast-1:' . $accountId . ':user/default/' . $reader,
+                "SessionLifetimeInMinutes" => 600
+            ]);
+        } catch (AwsException $e) {
+            return '';
+        }
+
+        return $result->get('EmbedUrl');
+    }
+
     public function buildCsv(CSVService $service)
+    {
+        $service->write();
+    }
+
+    public function buildMaintainLog(MaintainLogService $service)
     {
         $service->write();
     }
